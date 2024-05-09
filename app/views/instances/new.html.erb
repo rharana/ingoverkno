@@ -1,0 +1,32 @@
+<%= form_with(model: @instance, local: true) do |form| %>
+    <div>
+      <%= form.text_field :name %>
+    </div>
+  
+    <div>
+      <%= form.check_box :multi_tenant %>
+    </div>
+  
+    <div>
+      <%= form.text_field :port %>
+    </div>
+  
+    <div>
+      <%= form.text_field :population %>
+    </div>
+  
+    <div>
+      <%= form.text_field :province %>
+    </div>
+  
+    <div>
+      <%= form.text_field :banner_url %>
+    </div>
+  
+    <div>
+      <%= form.text_field :logo_url %>
+    </div>
+  
+    <%= form.submit "Submit" %>
+  <% end %>
+  
