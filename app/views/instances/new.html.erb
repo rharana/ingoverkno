@@ -184,165 +184,165 @@ button:hover {
 
 </nav>
 <div style= 'display: flex;  margin-left: 2em; margin-top: 2em;'>
-<%= form_for @instance, html: {id: 'instance_form', multipart: true } do |f| %>
+<%= form_with(model: @instance, html: { id: 'instance_form', multipart: true }, local: true) do |f| %>
+    <div class = 'container'>
+      <h1>Council</h1>
 
-  <div class = 'container'>
-    <h1>Council</h1>
-
-    <div class = 'form-group'>
-      <label>Name:</label>
-      <%= f.text_field :name, label: false %>
-    </div>
-
-    <div style = 'display: flex'>
-      <ul>
-
-        <li class = 'form-group'>
-          <label>Multi Tenant:</label>
-          <%= f.check_box :multi_tenant, label: false %>
-        </li>
-
-        <li class = 'form-group'>
-          <label>Population:</label>
-          <%= f.text_field :population, label: false %>
-        </li>
-
-        <li class = 'form-group'>
-          <label for="instance_logo">Logo:</label>
-          <label id="instance_logo_mark" class="file-upload-button" for="instance_logo">Select Logo Image
-            <%= f.file_field :logo, id: 'instance_logo', label: false %>
-            <img id="instance_logo_preview"/>
-          </label>
-        </li>
-
-      </ul>
-
-      <ul>
-        <li class = 'form-group'>
-          <label>Port:</label>
-          <%= f.number_field :port, label: false %>
-        </li>
-
-        <li class = 'form-group'>
-          <label>Province:</label>
-          <%= f.text_field :province, label: false %>
-        </li>
-
-        <li class = 'form-group'>
-          <label for="instance_banner">Banner:</label>
-          <label id="instance_banner_mark" class="file-upload-button" for="instance_banner">Select Banner Image
-            <%= f.file_field :banner, id: 'instance_banner', label: false %>
-            <img id="instance_banner_preview" style="object-fit: fill;"/>
-          </label>
-        </li>
-
-      </ul>
-    </div>
-  </div>
-
-  <div style = 'display: flex; margin-left: 1em'>
-    <div class = 'container-bottom'>
-      <h1>Colaboration Processes</h1>
+      <div class = 'form-group'>
+        <label>Name:</label>
+        <%= f.text_field :name, label: false %>
+      </div>
 
       <div style = 'display: flex'>
         <ul>
 
-          <li class = 'check-group'>
+          <li class = 'form-group'>
+            <label>Multi Tenant:</label>
             <%= f.check_box :multi_tenant, label: false %>
-            <label>Proposals</label>
           </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Anonimous proposals</label>
+
+          <li class = 'form-group'>
+            <label>Population:</label>
+            <%= f.text_field :population, label: false %>
           </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Participatory texts</label>
-          </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Policy proposals</label>
+
+          <li class = 'form-group'>
+            <label for="instance_logo">Logo:</label>
+            <label id="instance_logo_mark" class="file-upload-button" for="instance_logo">Select Logo Image
+              <%= f.file_field :logo, id: 'instance_logo', label: false %>
+              <img id="instance_logo_preview"/>
+            </label>
           </li>
 
         </ul>
 
         <ul>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Surveys</label>
+          <li class = 'form-group'>
+            <label>Port:</label>
+            <%= f.number_field :port, label: false %>
           </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Sortitions</label>
+
+          <li class = 'form-group'>
+            <label>Province:</label>
+            <%= f.text_field :province, label: false %>
           </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Citizen Forum</label>
-          </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Budgets</label>
+
+          <li class = 'form-group'>
+            <label for="instance_banner">Banner:</label>
+            <label id="instance_banner_mark" class="file-upload-button" for="instance_banner">Select Banner Image
+              <%= f.file_field :banner, id: 'instance_banner', label: false %>
+              <img id="instance_banner_preview" style="object-fit: fill;"/>
+            </label>
           </li>
 
         </ul>
       </div>
     </div>
+  <%= f.fields_for :feature_model do |feature_model_form| %>
+    <div style = 'display: flex; margin-left: 1em'>
+      <div class = 'container-bottom'>
+        <h1>Colaboration Processes</h1>
 
-    <div class = 'container-bottom'>
-      <h1>Common Services</h1>
+        <div style = 'display: flex'>
+          <ul>
 
-      <div style = 'display: flex'>
-        <ul>
+            <li class = 'check-group'>
+              <%= f.check_box :proposal, label: false %>
+              <label>Proposals</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :anonimous_proposal, label: false %>
+              <label>Anonimous proposals</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :participatory_text, label: false %>
+              <label>Participatory texts</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :policy_proposal, label: false %>
+              <label>Policy proposals</label>
+            </li>
 
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>DA Support</label>
-          </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>KM Support</label>
-          </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>IR Capacity</label>
-          </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Transparency</label>
-          </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Decission</label>
-          </li>
+          </ul>
 
-        </ul>
+          <ul>
+            <li class = 'check-group'>
+              <%= f.check_box :survey, label: false %>
+              <label>Surveys</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :sortition, label: false %>
+              <label>Sortitions</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :citizen_forum, label: false %>
+              <label>Citizen Forum</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :budget, label: false %>
+              <label>Budgets</label>
+            </li>
 
-        <ul>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Meetings</label>
-          </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label></label>
-          </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Debate</label>
-          </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Census</label>
-          </li>
-          <li class = 'check-group'>
-            <%= f.check_box :multi_tenant, label: false %>
-            <label>Delegation</label>
-          </li>
+          </ul>
+        </div>
+      </div>
 
-        </ul>
+      <div class = 'container-bottom'>
+        <h1>Common Services</h1>
+
+        <div style = 'display: flex'>
+          <ul>
+
+            <li class = 'check-group'>
+              <%= f.check_box :da_support, label: false %>
+              <label>DA Support</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :km_support, label: false %>
+              <label>KM Support</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :ir_capability, label: false %>
+              <label>IR Capacity</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :transparency, label: false %>
+              <label>Transparency</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :decision, label: false %>
+              <label>Decission</label>
+            </li>
+
+          </ul>
+
+          <ul>
+            <li class = 'check-group'>
+              <%= f.check_box :meeting, label: false %>
+              <label>Meetings</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :notification, label: false %>
+              <label>Notification</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :debate, label: false %>
+              <label>Debate</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :census, label: false %>
+              <label>Census</label>
+            </li>
+            <li class = 'check-group'>
+              <%= f.check_box :delegation, label: false %>
+              <label>Delegation</label>
+            </li>
+
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
+  <% end %>
   <%= f.submit "Submit" %>
 <% end %>
 

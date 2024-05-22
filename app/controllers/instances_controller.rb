@@ -1,12 +1,17 @@
 class InstancesController < ApplicationController
   def new
     @instance = Instance.new
+    @instance.build_feature_model
   end
 
   def create
 
     @instance = Instance.create(instance_params)
-    render json: @instance
+    if @instance.save
+      redirect_to @instance, notice: 'Project was successfully created.'
+    else
+      render :new
+    end
 
     # # Change to the instances directory
     # Dir.chdir('instances')

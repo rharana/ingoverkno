@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_09_122605) do
+ActiveRecord::Schema.define(version: 2024_05_22_135126) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
@@ -1605,6 +1605,30 @@ ActiveRecord::Schema.define(version: 2024_05_09_122605) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["decidim_organization_id"], name: "index_verifications_csv_census_to_organization"
+  end
+
+  create_table "feature_models", force: :cascade do |t|
+    t.integer "instance_id"
+    t.boolean "proposal"
+    t.boolean "anonimous_proposal"
+    t.boolean "participatory_text"
+    t.boolean "policy_proposal"
+    t.boolean "survey"
+    t.boolean "sortition"
+    t.boolean "citizen_forum"
+    t.boolean "budgeting"
+    t.boolean "da_support"
+    t.boolean "km_support"
+    t.boolean "ir_capability"
+    t.boolean "transparency"
+    t.boolean "decision"
+    t.boolean "meeting"
+    t.boolean "notification"
+    t.boolean "debate"
+    t.boolean "census"
+    t.boolean "delegation"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "instances", force: :cascade do |t|
