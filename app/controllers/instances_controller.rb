@@ -1,4 +1,8 @@
 class InstancesController < ApplicationController
+  def index
+    @instances = Instance.all
+  end
+  
   def new
     @instance = Instance.new
     @instance.build_feature_model
@@ -7,11 +11,8 @@ class InstancesController < ApplicationController
   def create
 
     @instance = Instance.create(instance_params)
-    if @instance.save
-      redirect_to @instance, notice: 'Project was successfully created.'
-    else
-      render :new
-    end
+    @instance.status = 0
+    render json: @instance
 
     # # Change to the instances directory
     # Dir.chdir('instances')
@@ -34,19 +35,20 @@ class InstancesController < ApplicationController
   private
 
   def instance_params
-    params.require(:instance).permit(:name, :multi_tenant, :port, :population, :province, :banner, :logo)
+    params.require(:instance).permit(:name, :multi_tenant, :port, :population, :province, :banner, :logo,
+    feature_model_attributes: [:proposal, :anonimous_proposal, :participatory_text, :policy_proposal, :survey, :sortition, :citizen_forum,
+    :budgeting, :da_support, :km_support, :ir_capability, :transparency, :decision, :meeting, :notification, :debate, :census, :delegation])
   end
 
 
   def update
   end
 
-  def delete
+  def destroy
   end
 
-  def read
+  def show
   end
 
-  def list
-  end
+
 end

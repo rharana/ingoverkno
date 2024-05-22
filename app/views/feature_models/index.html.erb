@@ -1,0 +1,9 @@
+<h1>List of True Features for Each Model</h1>
+<% @true_features_list.each_with_index do |features, index| %>
+  <h2>Feature Model <%= index + 1 %></h2>
+  <ul style='display:flex'>
+    <% features.each do |key, value| %>
+      <li style='margin: 0 auto'><%= key.humanize %></li>
+    <% end %>
+  </ul>
+<% end %>

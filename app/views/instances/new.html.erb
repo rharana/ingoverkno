@@ -179,9 +179,6 @@ button:hover {
   <div class= 'bottomHeader'>
   </div>
 
-  <i class="material-icons" style='color: white'>twitter</i>
-
-
 </nav>
 <div style= 'display: flex;  margin-left: 2em; margin-top: 2em;'>
 <%= form_with(model: @instance, html: { id: 'instance_form', multipart: true }, local: true) do |f| %>
@@ -247,19 +244,19 @@ button:hover {
           <ul>
 
             <li class = 'check-group'>
-              <%= f.check_box :proposal, label: false %>
+              <%= feature_model_form.check_box :proposal, label: false %>
               <label>Proposals</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :anonimous_proposal, label: false %>
+              <%= feature_model_form.check_box :anonimous_proposal, label: false %>
               <label>Anonimous proposals</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :participatory_text, label: false %>
+              <%= feature_model_form.check_box :participatory_text, label: false %>
               <label>Participatory texts</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :policy_proposal, label: false %>
+              <%= feature_model_form.check_box :policy_proposal, label: false %>
               <label>Policy proposals</label>
             </li>
 
@@ -267,20 +264,20 @@ button:hover {
 
           <ul>
             <li class = 'check-group'>
-              <%= f.check_box :survey, label: false %>
+              <%= feature_model_form.check_box :survey, label: false %>
               <label>Surveys</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :sortition, label: false %>
+              <%= feature_model_form.check_box :sortition, label: false %>
               <label>Sortitions</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :citizen_forum, label: false %>
+              <%= feature_model_form.check_box :citizen_forum, label: false %>
               <label>Citizen Forum</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :budget, label: false %>
-              <label>Budgets</label>
+              <%= feature_model_form.check_box :budgeting, label: false %>
+              <label>Budgeting</label>
             </li>
 
           </ul>
@@ -294,23 +291,23 @@ button:hover {
           <ul>
 
             <li class = 'check-group'>
-              <%= f.check_box :da_support, label: false %>
+              <%= feature_model_form.check_box :da_support, label: false %>
               <label>DA Support</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :km_support, label: false %>
+              <%= feature_model_form.check_box :km_support, label: false %>
               <label>KM Support</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :ir_capability, label: false %>
+              <%= feature_model_form.check_box :ir_capability, label: false %>
               <label>IR Capacity</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :transparency, label: false %>
+              <%= feature_model_form.check_box :transparency, label: false %>
               <label>Transparency</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :decision, label: false %>
+              <%= feature_model_form.check_box :decision, label: false %>
               <label>Decission</label>
             </li>
 
@@ -318,23 +315,23 @@ button:hover {
 
           <ul>
             <li class = 'check-group'>
-              <%= f.check_box :meeting, label: false %>
+              <%= feature_model_form.check_box :meeting, label: false %>
               <label>Meetings</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :notification, label: false %>
+              <%= feature_model_form.check_box :notification, label: false %>
               <label>Notification</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :debate, label: false %>
+              <%= feature_model_form.check_box :debate, label: false %>
               <label>Debate</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :census, label: false %>
+              <%= feature_model_form.check_box :census, label: false %>
               <label>Census</label>
             </li>
             <li class = 'check-group'>
-              <%= f.check_box :delegation, label: false %>
+              <%= feature_model_form.check_box :delegation, label: false %>
               <label>Delegation</label>
             </li>
 

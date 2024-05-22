@@ -1,18 +1,10 @@
 Rails.application.routes.draw do
+  # RESTful routes for Instances
+  resources :instances
 
-  # get 'instances/update'
-  # get 'instances/delete'
-  # get 'instances/read'
-  # get 'instances/list'
-  # get 'instance/:id', to: 'instance#show'
-  get "instances/new", to: "instances#new"
-  post "instances", to: "instances#create"
+  # RESTful routes for FeatureModels
+  resources :feature_models
 
-  # get 'instance/update'
-  # get 'instance/delete'
-  # get 'instance/read'
-  # get 'instance/list'
-
+  # If you're using Decidim, mount it properly if it's uncommented
   # mount Decidim::Core::Engine => '/'
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
