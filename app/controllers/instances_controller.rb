@@ -5,15 +5,8 @@ class InstancesController < ApplicationController
 
   def create
 
-    @instance = Instance.create(
-      name: params[:instance][:name],
-      multi_tenant: params[:instance][:multi_tenant],
-      port: params[:instance][:port],
-      population: params[:instance][:population],
-      province: params[:instance][:province],
-      banner_url: params[:instance][:banner_url],
-      logo_url: params[:instance][:logo_url])
-    render json: @instance 
+    @instance = Instance.create(instance_params)
+    render json: @instance
 
     # # Change to the instances directory
     # Dir.chdir('instances')
@@ -32,6 +25,13 @@ class InstancesController < ApplicationController
     # logger.info "Instance creation completed successfully"
 
   end
+
+  private
+
+  def instance_params
+    params.require(:instance).permit(:name, :multi_tenant, :port, :population, :province, :banner, :logo)
+  end
+
 
   def update
   end

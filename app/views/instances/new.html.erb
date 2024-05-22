@@ -1,32 +1,351 @@
-<%= form_with(model: @instance, local: true) do |form| %>
-    <div>
-      <%= form.text_field :name %>
+<style>
+#instance_form {
+  font-family: Arial, sans-serif;
+  width: 100%;
+}
+
+body{
+  margin:0;
+  -webkit-user-select: none; /* Chrome, Safari, and Opera */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer */
+  user-select: none;         /* Standard syntax */
+}
+
+nav{
+  width: 100%;
+  height: 10em;
+  position: relative;
+}
+
+.featureModel{
+  width: 100em;
+  height: 35em;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  margin: 4em;
+}
+
+.upperHeader{
+  background-color: rgb(26,25,23);
+  height: 30%;
+}
+
+.bottomHeader{
+  background-color: rgb(237,236,235);
+  height: 70%;
+}
+
+nav img{
+  position: absolute;
+  height: 80%;
+  margin-left: 3em;
+  margin-top: 1em;
+}
+
+.container
+{
+  margin: 1em;
+  padding: 2em;
+  width: 45em;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  border-radius: 0.5em;
+  background-color: rgb(237,236,235);
+}
+
+.container-bottom
+{
+  margin-right: 1em;
+  padding: 2em;
+  width: 20em;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  border-radius: 0.5em;
+  background-color: rgb(237,236,235);
+}
+
+h1
+{
+  text-align: center;
+  font-size: 1.5em;
+  margin-bottom: 1em;
+}
+
+ul{
+  padding: 0;
+  margin: 0;
+  padding-right: 1em;
+  list-style: none;
+}
+
+.form-group {
+  margin-bottom: 2em;
+  display: flex;
+}
+
+.check-group {
+  margin-bottom: 2em;
+  display: flex;
+}
+
+.form-group label {
+  display: flex;
+  margin-right: 1em;
+  width: 6em;
+}
+
+.check-group label {
+  display: flex;
+  margin-right: 1em;
+  width: 10em;
+}
+
+.form-group input[type="file"] {
+  position: relative;
+  opacity: 0; /* Make file input invisible but still functional */
+  width: 10em;
+  height: 10em;
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.form-group .file-upload-button {
+  position: relative;
+  display: block; /* Display block to take full width */
+  padding: 1em;
+  width: 10em;
+  height: 10em;
+  color: black;
+  text-align: center;
+  border: 2px dashed black;
+  cursor: pointer;
+}
+
+.form-group img {
+  display: block; /* Display block to take full width */
+  padding: 1em;
+  width: 10em;
+  height: 10em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: none;
+  object-fit: fill;
+  
+}
+
+.form-group input[type="submit"]  {
+  padding: 10px 20px;
+  color: #fff;
+  background-color: #007BFF;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+</style>
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    function handleFileSelect(evt) {
+      var files = evt.target.files;
+      var output = document.getElementById(evt.target.id + '_preview');
+      var mark = document.getElementById(evt.target.id + '_mark');
+      if (files && files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          output.src = e.target.result;
+          mark.style.visibility = 'hidden';
+          output.style.display = 'block';
+          output.style.visibility = 'visible';
+        }
+        reader.readAsDataURL(files[0]);
+      }
+    }
+
+    // Attach the event handler for both inputs
+    document.getElementById('instance_banner').addEventListener('change', handleFileSelect, false);
+    document.getElementById('instance_logo').addEventListener('change', handleFileSelect, false);
+  });
+
+</script>
+
+<nav>
+  <img src = "/images/ingoverkno-logo.png"/>
+  <div class= 'upperHeader'>
+  </div>
+  <div class= 'bottomHeader'>
+  </div>
+
+  <i class="material-icons" style='color: white'>twitter</i>
+
+
+</nav>
+<div style= 'display: flex;  margin-left: 2em; margin-top: 2em;'>
+<%= form_for @instance, html: {id: 'instance_form', multipart: true } do |f| %>
+
+  <div class = 'container'>
+    <h1>Council</h1>
+
+    <div class = 'form-group'>
+      <label>Name:</label>
+      <%= f.text_field :name, label: false %>
     </div>
-  
-    <div>
-      <%= form.check_box :multi_tenant %>
+
+    <div style = 'display: flex'>
+      <ul>
+
+        <li class = 'form-group'>
+          <label>Multi Tenant:</label>
+          <%= f.check_box :multi_tenant, label: false %>
+        </li>
+
+        <li class = 'form-group'>
+          <label>Population:</label>
+          <%= f.text_field :population, label: false %>
+        </li>
+
+        <li class = 'form-group'>
+          <label for="instance_logo">Logo:</label>
+          <label id="instance_logo_mark" class="file-upload-button" for="instance_logo">Select Logo Image
+            <%= f.file_field :logo, id: 'instance_logo', label: false %>
+            <img id="instance_logo_preview"/>
+          </label>
+        </li>
+
+      </ul>
+
+      <ul>
+        <li class = 'form-group'>
+          <label>Port:</label>
+          <%= f.number_field :port, label: false %>
+        </li>
+
+        <li class = 'form-group'>
+          <label>Province:</label>
+          <%= f.text_field :province, label: false %>
+        </li>
+
+        <li class = 'form-group'>
+          <label for="instance_banner">Banner:</label>
+          <label id="instance_banner_mark" class="file-upload-button" for="instance_banner">Select Banner Image
+            <%= f.file_field :banner, id: 'instance_banner', label: false %>
+            <img id="instance_banner_preview" style="object-fit: fill;"/>
+          </label>
+        </li>
+
+      </ul>
     </div>
-  
-    <div>
-      <%= form.text_field :port %>
+  </div>
+
+  <div style = 'display: flex; margin-left: 1em'>
+    <div class = 'container-bottom'>
+      <h1>Colaboration Processes</h1>
+
+      <div style = 'display: flex'>
+        <ul>
+
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Proposals</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Anonimous proposals</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Participatory texts</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Policy proposals</label>
+          </li>
+
+        </ul>
+
+        <ul>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Surveys</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Sortitions</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Citizen Forum</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Budgets</label>
+          </li>
+
+        </ul>
+      </div>
     </div>
-  
-    <div>
-      <%= form.text_field :population %>
+
+    <div class = 'container-bottom'>
+      <h1>Common Services</h1>
+
+      <div style = 'display: flex'>
+        <ul>
+
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>DA Support</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>KM Support</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>IR Capacity</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Transparency</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Decission</label>
+          </li>
+
+        </ul>
+
+        <ul>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Meetings</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label></label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Debate</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Census</label>
+          </li>
+          <li class = 'check-group'>
+            <%= f.check_box :multi_tenant, label: false %>
+            <label>Delegation</label>
+          </li>
+
+        </ul>
+      </div>
     </div>
-  
-    <div>
-      <%= form.text_field :province %>
-    </div>
-  
-    <div>
-      <%= form.text_field :banner_url %>
-    </div>
-  
-    <div>
-      <%= form.text_field :logo_url %>
-    </div>
-  
-    <%= form.submit "Submit" %>
-  <% end %>
-  
+  </div>
+  <%= f.submit "Submit" %>
+<% end %>
+
+<img src = "/images/feature-model.jpeg" class = 'featureModel'/>
+
+</div>
