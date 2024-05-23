@@ -12,29 +12,20 @@ class InstancesController < ApplicationController
 
     @instance = Instance.new(instance_params)
     if(@instance.save)
-      redirect_to instances_path
+      SetupDecidimInstanceJob.perform_later(@instance.id)
+      redirect_to instances_path, notice: 'Instance creation initiated. Setup will complete in the background.'
     else
       # If the instance fails to save, re-render the 'new' form
       render :new
     end
+  end
 
-
-    # # Change to the instances directory
-    # Dir.chdir('instances')
-    
-    # # Create and setup the new decidim app
-    # system('decidim decidim_instance')
-    
-    # # Change directory into the new app
-    # Dir.chdir('decidim_instance')
-    
-    # # Install JavaScript dependenciess
-    # system('yarn install')
-
-    # system('bin/rails db:create db:migrate')
-
-    # logger.info "Instance creation completed successfully"
-
+  def update
+    @instance = Instance.find(params[:id])
+    if @instance.update(instance_params)
+      # If the update is successful, redirect to a specific path, usually the show page for the instance
+      redirect_to instances_path, notice: 'Instance was successfully updated.'
+    end
   end
 
   private
@@ -43,10 +34,6 @@ class InstancesController < ApplicationController
     params.require(:instance).permit(:name, :multi_tenant, :port, :population, :province, :banner, :logo, :status,
     feature_model_attributes: [:proposal, :anonimous_proposal, :participatory_text, :policy_proposal, :survey, :sortition, :citizen_forum,
     :budgeting, :da_support, :km_support, :ir_capability, :transparency, :decision, :meeting, :notification, :debate, :census, :delegation])
-  end
-
-
-  def update
   end
 
   def destroy
