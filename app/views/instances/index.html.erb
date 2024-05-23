@@ -82,14 +82,7 @@ th {
 			<th><%=instance.name%></th>
 			<th><%=instance.port%></th>
 			<th><%=instance.multi_tenant%></th>
-			<th>  <% status_label = case instance.status
-                    when 0 then "Shut"
-                    when 1 then "Pending"
-                    when 2 then "Running"
-                    else "Unknown status"
-                    end %>
-  		<%= status_label %></th>
-
+			<th><%=instance.status%></th>
 			<th><i class="material-icons" style='color: black'>remove_red_eye</i></th>
 			<th><i class="material-icons" style='color: black'>play_arrow</i></th>
 			<th><i class="material-icons" style='color: black'>publish</i></th>

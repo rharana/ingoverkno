@@ -10,9 +10,14 @@ class InstancesController < ApplicationController
 
   def create
 
-    @instance = Instance.create(instance_params)
-    @instance.status = 0
-    render json: @instance
+    @instance = Instance.new(instance_params)
+    if(@instance.save)
+      redirect_to instances_path
+    else
+      # If the instance fails to save, re-render the 'new' form
+      render :new
+    end
+
 
     # # Change to the instances directory
     # Dir.chdir('instances')
@@ -23,7 +28,7 @@ class InstancesController < ApplicationController
     # # Change directory into the new app
     # Dir.chdir('decidim_instance')
     
-    # # Install JavaScript dependencies
+    # # Install JavaScript dependenciess
     # system('yarn install')
 
     # system('bin/rails db:create db:migrate')
@@ -35,7 +40,7 @@ class InstancesController < ApplicationController
   private
 
   def instance_params
-    params.require(:instance).permit(:name, :multi_tenant, :port, :population, :province, :banner, :logo,
+    params.require(:instance).permit(:name, :multi_tenant, :port, :population, :province, :banner, :logo, :status,
     feature_model_attributes: [:proposal, :anonimous_proposal, :participatory_text, :policy_proposal, :survey, :sortition, :citizen_forum,
     :budgeting, :da_support, :km_support, :ir_capability, :transparency, :decision, :meeting, :notification, :debate, :census, :delegation])
   end

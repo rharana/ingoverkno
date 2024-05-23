@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_22_135126) do
+ActiveRecord::Schema.define(version: 2024_05_23_071114) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "ltree"
@@ -1641,6 +1641,7 @@ ActiveRecord::Schema.define(version: 2024_05_22_135126) do
     t.string "logo_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "status", default: 1, null: false
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|

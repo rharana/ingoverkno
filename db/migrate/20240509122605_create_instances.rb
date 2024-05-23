@@ -8,7 +8,6 @@ class CreateInstances < ActiveRecord::Migration[6.1]
       t.string :province
       t.string :banner_url
       t.string :logo_url
-      t.integer :status
 
       t.timestamps
     end
