@@ -28,6 +28,12 @@ class InstancesController < ApplicationController
     end
   end
 
+  def start
+    @instance = Instance.find(params[:id])
+    StartDecidimInstanceJob.perform_later(@instance.id)
+    redirect_to instances_path
+  end
+
   private
 
   def instance_params

@@ -13,6 +13,8 @@ class SetupDecidimInstanceJob < ApplicationJob
     system('yarn install')
     system('bin/rails db:create db:migrate')
 
+    system("sed -i 's/-p 3000/-p #{instance.port}/' Procfile.dev")
+    
     # Update the instance's status after successful setup
     instance.update!(status: 'shut')
 
