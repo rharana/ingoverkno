@@ -7,24 +7,20 @@ WORKDIR /app
 # Set non-interactive mode for apt-get
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install dependencies including ca-certificates
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+# Install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
     git \
+    gnupg \
     libssl-dev \
     zlib1g-dev \
-    postgresql \
-    libpq-dev \
-    nodejs \
-    yarn \
     imagemagick \
     libicu-dev \
     locales \
     ca-certificates \
     sudo \
-    gnupg \
+    libpq-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -35,6 +31,23 @@ RUN sed -i 's/# \(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
 ENV LANG en_US.UTF-8  
 ENV LANGUAGE en_US:en  
 ENV LC_ALL en_US.UTF-8  
+
+# Setup Node.js repository
+RUN mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" > /etc/apt/sources.list.d/nodesource.list
+
+# Install Node.js
+RUN apt-get update && apt-get install -y nodejs
+
+# Setup Yarn repository
+RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null \
+    && echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" > /etc/apt/sources.list.d/yarn.list
+
+# Install Yarn
+RUN apt-get update && apt-get install -y yarn
+
+RUN yarn --version
 
 # Install rbenv and ruby-build
 RUN git clone https://github.com/rbenv/rbenv.git ~/.rbenv && \
@@ -52,26 +65,23 @@ RUN rbenv install 3.1.1 && rbenv global 3.1.1
 # Install rbenv-vars
 RUN git clone https://github.com/rbenv/rbenv-vars.git "$(rbenv root)"/plugins/rbenv-vars
 
-# Configure PostgreSQL user
-RUN service postgresql start && \
-    su postgres -c "psql -c \"CREATE USER decidim_app WITH SUPERUSER CREATEDB NOCREATEROLE PASSWORD 'thepassword'\""
+# Copy the Gemfile and Gemfile.lock into the image
+COPY Gemfile Gemfile.lock ./
 
-# Remove any existing Node.js installations and install Node.js and Yarn from official sources
-RUN apt-get update && apt-get install -y --no-install-recommends gnupg && \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/trusted.gpg.d/nodesource.gpg && \
-    echo "deb [signed-by=/etc/apt/trusted.gpg.d/nodesource.gpg] https://deb.nodesource.com/node_18.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
-    curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /usr/share/keyrings/yarnkey.gpg >/dev/null && \
-    echo "deb [signed-by=/usr/share/keyrings/yarnkey.gpg] https://dl.yarnpkg.com/debian stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-    apt-get remove -y nodejs libnode* && \
-    apt-get update && \
-    apt-get install -y --no-install-recommends nodejs yarn
+# Install gems
+RUN gem install bundler && bundle install
 
-# Install the decidim gem
-RUN gem install decidim
-
+# Copy the main application.
+# Copy the main application and entrypoint script
 COPY . /app
+COPY entrypoint.sh /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/entrypoint.sh
 
-RUN bundle install
+# Expose port 3000 to be accessible from the host.
+EXPOSE 3000
 
-# Start the server
+# Set the entrypoint script to initialize the container
+ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+
+# Command to run the Rails server
 CMD ["bin/dev"]

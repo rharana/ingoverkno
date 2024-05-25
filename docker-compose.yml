@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=ingoverkno
+      - DB_PASSWORD=ingoverkno
+      - LANG=en_US.UTF-8
+      - LANGUAGE=en_US:en
+      - LC_ALL=en_US.UTF-8
+    depends_on:
+      - db
+    command: bin/dev
+
+  db:
+    image: postgres:12
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=ingoverkno
+      - POSTGRES_PASSWORD=ingoverkno
+      - POSTGRES_DB=ingoverkno_development
+
+volumes:
+  postgres_data:
