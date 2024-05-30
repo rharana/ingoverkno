@@ -1,6 +1,4 @@
 # Ignore the instances directory
-instances/
-
 # Common files and directories to ignore
 .git/
 .gitignore

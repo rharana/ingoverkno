@@ -21,8 +21,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     sudo \
     libpq-dev \
+    supervisor \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+# Create and set permissions for /var/run (to ensure the socket file can be created)
+RUN mkdir -p /var/run/supervisor && \
+    chown -R root:root /var/run/supervisor
 
 # Set the locale
 RUN sed -i 's/# \(en_US.UTF-8 UTF-8\)/\1/' /etc/locale.gen && \
@@ -77,11 +82,13 @@ COPY . /app
 COPY entrypoint.sh /usr/bin/entrypoint.sh
 RUN chmod +x /usr/bin/entrypoint.sh
 
+COPY supervisord.conf /etc/supervisor/supervisord.conf
+
 # Expose port 3000 to be accessible from the host.
-EXPOSE 3000
+EXPOSE 3000 3002
 
 # Set the entrypoint script to initialize the container
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 
 # Command to run the Rails server
-CMD ["bin/dev"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

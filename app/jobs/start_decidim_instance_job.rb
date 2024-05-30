@@ -4,8 +4,9 @@ class StartDecidimInstanceJob < ApplicationJob
   def perform(instance_id)
     instance = Instance.find(instance_id)
 
-    system("systemctl daemon-reload")
-    system("systemctl restart decidim@#{instance.name}")
+    system("supervisorctl reread")
+    system("supervisorctl update")
+    system("supervisorctl start decidim-#{instance.name}")
 
     instance.update!(status: 'running')
     Rails.logger.info "Instance start for #{instance.name} completed successfully and status updated to running."

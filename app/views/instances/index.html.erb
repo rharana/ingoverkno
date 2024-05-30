@@ -54,10 +54,141 @@ th {
 	color: black;
 	white-space: nowrap;
 }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+#loading {
+  animation: spin 2s linear infinite;
+}
+
+i {
+	color: black
+}
+
 </style>
 
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		const buttons = document.querySelectorAll('.start-button');
+		buttons.forEach(button => {
+			const status = button.dataset.status;
+			const instanceId = button.dataset.instanceId;
+
+			if(status === 'pending'){
+				button.innerHTML = '<i class="material-icons" id="loading">loop</i>';
+				checkStatus(instanceId, button);
+			}
+
+			else if(status === 'shut'){
+				button.addEventListener('click', function(e) {
+					e.preventDefault();
+					this.innerHTML = '<i class="material-icons" id="loading">loop</i>';
+					startInstance(instanceId, this);
+				});
+			}
+
+			else if(status === 'running'){
+				button.innerHTML = '<i class="material-icons">stop</i>';
+				button.addEventListener('click', function(e) {
+					e.preventDefault();
+					this.innerHTML = '<i class="material-icons" id="loading">loop</i>';
+					startInstance(instanceId, this);
+				});
+			}
+
+		});
+	});
+
+	function startInstance(instanceId, button) {
+		const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+		fetch(`/instances/${instanceId}/start`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRF-Token': csrfToken
+			},
+			credentials: 'same-origin' // Ensure cookies are sent with the request if same-origin
+		})
+		.then(response => {
+			if (response.ok) {
+				checkStatus(instanceId, button);
+			} else {
+				console.error('Failed to start instance: ' + response.statusText);
+			}
+		})
+		.catch(error => console.error('Error:', error));
+	}
+
+	function stopInstance(instanceId, button) {
+		const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+		fetch(`/instances/${instanceId}/stop`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRF-Token': csrfToken
+			},
+			credentials: 'same-origin' // Ensure cookies are sent with the request if same-origin
+		})
+		.then(response => {
+			if (response.ok) {
+				checkStatus(instanceId, button);
+			} else {
+				console.error('Failed to start instance: ' + response.statusText);
+			}
+		})
+		.catch(error => console.error('Error:', error));
+	}
+
+	function checkStatus(instanceId, button) {
+		const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+		const interval = setInterval(() => {
+			fetch(`/instances/${instanceId}/status`,{
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRF-Token': csrfToken
+				},
+				credentials: 'same-origin'
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.status === 'running') {
+					clearInterval(interval);
+					button.innerHTML = '<i class="material-icons">stop</i>';
+					button.addEventListener('click', function(e) {
+						e.preventDefault();
+						const instanceId = this.dataset.instanceId;
+						this.innerHTML = '<i class="material-icons" id="loading">hourglass_empty</i>';
+						stopInstance(instanceId, this);
+					});
+				}
+				else if (data.status === 'shut') {
+					clearInterval(interval);
+					button.innerHTML = '<i class="material-icons">play_arrow</i>';
+					button.addEventListener('click', function(e) {
+						e.preventDefault();
+						const instanceId = this.dataset.instanceId;
+						this.innerHTML = '<i class="material-icons" id="loading">hourglass_empty</i>';
+						startInstance(instanceId, this);
+					});
+				}
+			})
+			.catch(error => {
+				console.error('Error checking status:', error);
+				clearInterval(interval);
+			});
+		}, 2000); // Check every seconds
+	}
+
+</script>
 <nav>
   <img src = "/images/ingoverkno-logo.png"/>
   <div class= 'upperHeader'>
@@ -84,7 +215,11 @@ th {
 			<th><%=instance.multi_tenant%></th>
 			<th><%=instance.status%></th>
 			<th><i class="material-icons" style='color: black'>remove_red_eye</i></th>
-			<th><i class="material-icons" style='color: black'>play_arrow</i></th>
+			<th>
+				<%= link_to '#', class: 'button start-button', id: "start-button-#{instance.id}", data: {status: instance.status, instance_id: instance.id} do %>
+					<i class="material-icons">play_arrow</i>
+				<% end %>
+			</th>
 			<th><i class="material-icons" style='color: black'>publish</i></th>
 			<th><i class="material-icons" style='color: black'>delete</i></th>
 		</tr>

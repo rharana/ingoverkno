@@ -373,6 +373,7 @@ GEM
       mime-types
     fog-local (0.8.0)
       fog-core (>= 1.27, < 3.0)
+    foreman (0.88.1)
     formatador (1.1.0)
     foundation_rails_helper (4.0.1)
       actionpack (>= 4.1, < 7.1)
@@ -768,6 +769,7 @@ DEPENDENCIES
   byebug (~> 11.0)
   decidim (= 0.28.1)
   decidim-dev (= 0.28.1)
+  foreman
   letter_opener_web (~> 2.0)
   listen (~> 3.1)
   net-imap (~> 0.2.3)

@@ -6,6 +6,7 @@ ruby RUBY_VERSION
 
 gem "decidim", "0.28.1"
 gem 'tzinfo-data'
+gem 'foreman'
 # gem "decidim-conferences", "0.28.1"
 # gem "decidim-design", "0.28.1"
 # gem "decidim-elections", "0.28.1"
