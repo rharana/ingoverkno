@@ -131,16 +131,21 @@ ul{
   
 }
 
-.form-group input[type="submit"]  {
+.btn-submit {
+  position: absolute;
+  margin: 0;
+  left: 60vw;
+  width: 10em;
+  bottom: 5em;
+  font-size: 1.5em;
+  background-color: rgb(237,236,235);
+  color: black;
   padding: 10px 20px;
-  color: #fff;
-  background-color: #007BFF;
+  border-radius: 5px;
   border: none;
   cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  border-radius: 0.5em;
 }
 
 </style>
@@ -345,7 +350,7 @@ button:hover {
       </div>
     </div>
   <% end %>
-  <%= f.submit "Submit" %>
+  <%= f.submit "Submit", class: "btn-submit" %>
 <% end %>
 
 <img src = "/images/feature-model.jpeg" class = 'featureModel'/>

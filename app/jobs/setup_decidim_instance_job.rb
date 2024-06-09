@@ -3,7 +3,7 @@ class SetupDecidimInstanceJob < ApplicationJob
 
   def perform(instance_id)
     instance = Instance.find(instance_id)
-    
+
     command = <<~COMMAND
       printf "\n[program:decidim-#{instance.name}]\n\
       command=/root/.rbenv/shims/bundle exec bin/dev\n\
