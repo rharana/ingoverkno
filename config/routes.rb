@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+
+  root to: 'static_pages#home'
+
+  post '/login', to: 'instances#new'
+  get 'login', to: 'users#login'
+
   # RESTful routes for Instances
   resources :instances do
     member do
