@@ -17,7 +17,7 @@ class InstancesController < ApplicationController
       paths = save_files(@instance, params[:instance][:banner], params[:instance][:logo])
       @organization = DecidimOrganization.new(
         name: @instance.population,
-        host: "barcelona/juan",
+        host: "#{@instance.name}.localhost",
         default_locale: "es",
         available_locales: ['en', 'es', 'fr'],  # default value, considered required for functionality
         created_at: Time.now,
