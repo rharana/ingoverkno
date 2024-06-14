@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :instances do
     member do
       post 'start'
+      post 'stop'
       get 'status'
     end
   end

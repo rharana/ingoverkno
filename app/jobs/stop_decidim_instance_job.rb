@@ -1,5 +1,5 @@
 class StopDecidimInstanceJob < ApplicationJob
-  queue_as :default
+  queue_as :stop_instance
 
   def perform(instance_id)
     instance = Instance.find(instance_id)

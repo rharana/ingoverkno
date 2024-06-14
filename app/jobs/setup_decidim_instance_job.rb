@@ -1,5 +1,5 @@
 class SetupDecidimInstanceJob < ApplicationJob
-  queue_as :default
+  queue_as :setup_instance
 
   def perform(instance_id)
     instance = Instance.find(instance_id)
@@ -16,7 +16,7 @@ class SetupDecidimInstanceJob < ApplicationJob
 
     system(command)
 
-    Dir.chdir('instances')
+    Dir.chdir('/app/instances')
 
     # Create and setup the new decidim app
     system("decidim #{instance.name}")
@@ -26,7 +26,7 @@ class SetupDecidimInstanceJob < ApplicationJob
 
     system("sed -i 's/-p 3000/-p #{instance.port}/' Procfile.dev")
     system("echo \"USERNAME=ingoverkno\nPASSWORD=ingoverkno\" >> .env")
-    system("printf \"gem 'tzinfo-data'\ngem 'foreman'\n\" >> Gemfile")
+    system("printf \"gem 'tzinfo-data'\ngem 'foreman'\ngem 'decidim-proposals'\ngem 'decidim-sortitions'\n\" >> Gemfile")
 
     Dir.chdir('config')
     system("sed -i 's/port: 3035/port: #{instance.shakapacker_port}/' shakapacker.yml")

@@ -73,36 +73,49 @@ i {
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 <script>
+
+	//Update Button Info on startup
 	document.addEventListener('DOMContentLoaded', function() {
 		const buttons = document.querySelectorAll('.start-button');
 		buttons.forEach(button => {
+			updateButton(button)
+		});
+	});
+
+	//Update Button Info
+	function updateButton(button) {
+		button.addEventListener('click', function(e) {
+			e.preventDefault();
 			const status = button.dataset.status;
 			const instanceId = button.dataset.instanceId;
 
-			if(status === 'pending'){
-				button.innerHTML = '<i class="material-icons" id="loading">loop</i>';
-				checkStatus(instanceId, button);
+			if (status === 'shut') {
+				this.innerHTML = '<i class="material-icons" id="loading">loop</i>';
+				startInstance(instanceId, button);
+			} else if (status === 'running') {
+				this.innerHTML = '<i class="material-icons" id="loading">loop</i>';
+				stopInstance(instanceId, button);
 			}
-
-			else if(status === 'shut'){
-				button.addEventListener('click', function(e) {
-					e.preventDefault();
-					this.innerHTML = '<i class="material-icons" id="loading">loop</i>';
-					startInstance(instanceId, this);
-				});
-			}
-
-			else if(status === 'running'){
-				button.innerHTML = '<i class="material-icons">stop</i>';
-				button.addEventListener('click', function(e) {
-					e.preventDefault();
-					this.innerHTML = '<i class="material-icons" id="loading">loop</i>';
-					startInstance(instanceId, this);
-				});
-			}
-
 		});
-	});
+
+		if (button.dataset.status === 'pending') {
+			button.innerHTML = '<i class="material-icons" id="loading">loop</i>';
+			checkStatus(button.dataset.instanceId, button);
+		}
+	}
+
+	function updateButtonStatus(button, status) {
+		button.dataset.status = status;
+		if(status === 'running') {
+			button.innerHTML = '<i class="material-icons">stop</i>';
+			console.log('Now Status is running')
+			updateButton(button)
+		} else if(status === 'shut') {
+			button.innerHTML = '<i class="material-icons">play_arrow</i>';
+			console.log('Now Status is shut')
+			updateButton(button)
+		}
+	}
 
 	function startInstance(instanceId, button) {
 		const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -127,20 +140,20 @@ i {
 
 	function stopInstance(instanceId, button) {
 		const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
+		console.log('Stopping Instance')
 		fetch(`/instances/${instanceId}/stop`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				'X-CSRF-Token': csrfToken
 			},
-			credentials: 'same-origin' // Ensure cookies are sent with the request if same-origin
+			credentials: 'same-origin'
 		})
 		.then(response => {
 			if (response.ok) {
 				checkStatus(instanceId, button);
 			} else {
-				console.error('Failed to start instance: ' + response.statusText);
+				console.error('Failed to stop instance: ' + response.statusText);
 			}
 		})
 		.catch(error => console.error('Error:', error));
@@ -148,9 +161,8 @@ i {
 
 	function checkStatus(instanceId, button) {
 		const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
 		const interval = setInterval(() => {
-			fetch(`/instances/${instanceId}/status`,{
+			fetch(`/instances/${instanceId}/status`, {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'application/json',
@@ -160,35 +172,20 @@ i {
 			})
 			.then(response => response.json())
 			.then(data => {
-				if (data.status === 'running') {
+				updateButtonStatus(button, data.status);
+				if (data.status !== 'pending') {
 					clearInterval(interval);
-					button.innerHTML = '<i class="material-icons">stop</i>';
-					button.addEventListener('click', function(e) {
-						e.preventDefault();
-						const instanceId = this.dataset.instanceId;
-						this.innerHTML = '<i class="material-icons" id="loading">hourglass_empty</i>';
-						stopInstance(instanceId, this);
-					});
-				}
-				else if (data.status === 'shut') {
-					clearInterval(interval);
-					button.innerHTML = '<i class="material-icons">play_arrow</i>';
-					button.addEventListener('click', function(e) {
-						e.preventDefault();
-						const instanceId = this.dataset.instanceId;
-						this.innerHTML = '<i class="material-icons" id="loading">hourglass_empty</i>';
-						startInstance(instanceId, this);
-					});
 				}
 			})
 			.catch(error => {
 				console.error('Error checking status:', error);
 				clearInterval(interval);
 			});
-		}, 2000); // Check every seconds
+		}, 2000); // Check every 2 seconds
 	}
-
 </script>
+
+
 <nav>
   <img src = "/images/ingoverkno-logo.png"/>
   <div class= 'upperHeader'>

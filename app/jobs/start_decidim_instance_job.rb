@@ -1,5 +1,5 @@
 class StartDecidimInstanceJob < ApplicationJob
-  queue_as :default
+  queue_as :start_instance
 
   def perform(instance_id)
     instance = Instance.find(instance_id)
