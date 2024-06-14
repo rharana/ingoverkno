@@ -72,6 +72,18 @@ td {
 i {
 	color: black
 }
+a {
+    color: inherit;
+    text-decoration: none;
+    font-size: inherit;
+    font-family: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer; 
+}
+
 
 </style>
 
@@ -231,7 +243,11 @@ i {
 			<td><%=instance.port%></td>
 			<td><%=instance.multi_tenant%></td>
 			<td class="instance-status"><%= instance.status %></td>
-			<td><i class="material-icons" style='color: black'>remove_red_eye</i></td>
+			<td>
+				<a href= 'http://<%= instance.name %>.localhost:<%= instance.port %>' target="_blank">
+					<i class="material-icons" style='color: black'>remove_red_eye</i>
+				</a>
+			</td>
 			<td>
 				<%= link_to '#', class: 'button start-button', id: "start-button-#{instance.id}", data: {status: instance.status, instance_id: instance.id} do %>
 					<i class="material-icons">play_arrow</i>
