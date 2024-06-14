@@ -54,6 +54,11 @@ th {
 	color: black;
 	white-space: nowrap;
 }
+td {
+  background-color: rgb(237,236,235);
+	color: black;
+	white-space: nowrap;
+}
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
@@ -78,9 +83,24 @@ i {
 	document.addEventListener('DOMContentLoaded', function() {
 		const buttons = document.querySelectorAll('.start-button');
 		buttons.forEach(button => {
+			if(button.dataset.status === 'running') {
+				button.innerHTML = '<i class="material-icons">stop</i>';
+			}else if(button.dataset.status === 'shut') {
+				button.innerHTML = '<i class="material-icons">play_arrow</i>';
+			}
 			updateButton(button)
 		});
 	});
+
+	function updateInstanceStatusDisplay(instanceId, status) {
+    const instanceRow = document.querySelector(`tr[data-instance-id="${instanceId}"]`); // Make sure to add data-instance-id in your HTML
+    if (instanceRow) {
+        const statusCell = instanceRow.querySelector('td.instance-status');
+        if (statusCell) {
+            statusCell.textContent = status; // Update text
+        }
+    }
+	}
 
 	//Update Button Info
 	function updateButton(button) {
@@ -105,14 +125,14 @@ i {
 	}
 
 	function updateButtonStatus(button, status) {
+		const instanceId = button.dataset.instanceId;
 		button.dataset.status = status;
+		updateInstanceStatusDisplay(instanceId, status);
 		if(status === 'running') {
 			button.innerHTML = '<i class="material-icons">stop</i>';
-			console.log('Now Status is running')
 			updateButton(button)
 		} else if(status === 'shut') {
 			button.innerHTML = '<i class="material-icons">play_arrow</i>';
-			console.log('Now Status is shut')
 			updateButton(button)
 		}
 	}
@@ -206,19 +226,19 @@ i {
 		<th></th>
 	</tr>
 	<% @instances.each do |instance| %>
-		<tr>
-			<th><%=instance.name%></th>
-			<th><%=instance.port%></th>
-			<th><%=instance.multi_tenant%></th>
-			<th><%=instance.status%></th>
-			<th><i class="material-icons" style='color: black'>remove_red_eye</i></th>
-			<th>
+		<tr data-instance-id="<%= instance.id %>">
+			<td><%=instance.name%></td>
+			<td><%=instance.port%></td>
+			<td><%=instance.multi_tenant%></td>
+			<td class="instance-status"><%= instance.status %></td>
+			<td><i class="material-icons" style='color: black'>remove_red_eye</i></td>
+			<td>
 				<%= link_to '#', class: 'button start-button', id: "start-button-#{instance.id}", data: {status: instance.status, instance_id: instance.id} do %>
 					<i class="material-icons">play_arrow</i>
 				<% end %>
-			</th>
-			<th><i class="material-icons" style='color: black'>publish</i></th>
-			<th><i class="material-icons" style='color: black'>delete</i></th>
+			</td>
+			<td><i class="material-icons" style='color: black'>publish</i></td>
+			<td><i class="material-icons" style='color: black'>delete</i></td>
 		</tr>
 	<% end %>
 </table>
