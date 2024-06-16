@@ -2,6 +2,6 @@ class DeleteDecidimInstanceJob < ApplicationJob
   queue_as :default
 
   def perform(*args)
-    # Do something later
+    # Deletions
   end
 end
