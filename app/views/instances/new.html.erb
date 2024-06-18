@@ -4,6 +4,44 @@
   width: 100%;
 }
 
+.form-error{
+  display: none;
+}
+
+.is-invalid-input{
+  border-color: red;
+}
+
+.field_with_errors {
+  position: relative; 
+}
+
+.error_marker {
+  content: attr(title);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  text-align: center;
+  white-space: nowrap;
+  z-index: 1000;
+  background-color: black; /* Tooltip background */
+  color: white;
+  font-size: 1em;
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.3s ease-in-out; /* Smooth transition for opacity */
+}
+
+.field_with_errors:hover .error_marker {
+  opacity: 1; /* Visible on hover */
+}
+
+/* Style for the tooltip part */
+.error_marker:hover::after {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out 0.3s; /* Delayed appearance */
+  visibility: hidden;
+}
+
 body{
   margin:0;
   -webkit-user-select: none; /* Chrome, Safari, and Opera */
@@ -186,7 +224,7 @@ ul{
 
 </nav>
 <div style= 'display: flex;  margin-left: 2em; margin-top: 2em;'>
-<%= form_with(model: @instance, html: { id: 'instance_form', multipart: true }, local: true) do |f| %>
+<%= form_with(model: @instance, html: { id: 'instance_form', multipart: true }, local: true, validate: true) do |f| %>
     <div class = 'container'>
       <h1>Council</h1>
 

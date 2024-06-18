@@ -21,6 +21,8 @@ gem "wicked_pdf", "~> 2.1"
 
 gem 'dotenv-rails'
 
+gem 'client_side_validations'
+
 group :development, :test do
   gem "byebug", "~> 11.0", platform: :mri
 

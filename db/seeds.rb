@@ -38,7 +38,6 @@ content_block = Decidim::ContentBlock.create!(
 
 # Correct the path to the image
 image_path = Rails.root.join("app", "packs", "images", "#{instance_name}_banner.jpg")
-puts image_path
 
 # Ensure the file exists
 if File.exist?(image_path)
