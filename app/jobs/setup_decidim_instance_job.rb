@@ -25,13 +25,18 @@ class SetupDecidimInstanceJob < ApplicationJob
     system('yarn install')
 
     system("sed -i 's/-p 3000/-p #{instance.port}/' Procfile.dev")
-    system("echo \"USERNAME=ingoverkno\nPASSWORD=ingoverkno\" >> .env")
-    system("printf \"gem 'tzinfo-data'\ngem 'foreman'\ngem 'decidim-proposals'\ngem 'decidim-sortitions'\n\" >> Gemfile")
+    system("echo \"USERNAME=ingoverkno\nPASSWORD=ingoverkno\nINSTANCE_ID=#{instance.id}\nINSTANCE_NAME=#{instance.name}\nINSTANCE_POPULATION=#{instance.population}\" >> .env")
+    system("printf \"gem 'tzinfo-data'\ngem 'foreman'\ngem 'decidim-proposals'\ngem 'decidim-sortitions'\ngem 'dotenv-rails'\" >> Gemfile")
 
     Dir.chdir('config')
     system("sed -i 's/port: 3035/port: #{instance.shakapacker_port}/' shakapacker.yml")
     system("sed -i 's/database: #{instance.name}_development/database: ingoverkno_development/' database.yml")
     system("rm -rf /app/instances/#{instance.name}/db/migrate")
+    system("cp /app/public/uploads/banners/#{instance.name}.jpg /app/instances/#{instance.name}/app/packs/images/#{instance.name}_banner.jpg")
+    system("cp -f /app/db/seeds.rb /app/instances/#{instance.name}/db/seeds.rb")
+
+    Dir.chdir("/app/instances/#{instance.name}")
+    system("rails db:seed")
     # Update the instance's status after successful setup
     instance.update!(status: 'shut')
 

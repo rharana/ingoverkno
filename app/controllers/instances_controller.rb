@@ -14,36 +14,7 @@ class InstancesController < ApplicationController
 
     @instance = Instance.new(instance_params)
     if(@instance.save)
-      paths = save_files(@instance, params[:instance][:banner], params[:instance][:logo])
-      @organization = DecidimOrganization.new(
-        name: @instance.population,
-        host: "#{@instance.name}.localhost",
-        default_locale: "es",
-        available_locales: ['en', 'es', 'fr'],  # default value, considered required for functionality
-        created_at: Time.now,
-        updated_at: Time.now,
-        description: { "es": "Ayuntamiento de #{@instance.population}" },
-        reference_prefix: "ORG",
-        secondary_hosts: [],
-        available_authorizations: [],
-        id_documents_methods: ['online'],
-        id_documents_explanation_text: {},
-        colors: {},
-        logo: paths[:logo_url],
-        highlighted_content_banner_enabled: true,
-        highlighted_content_banner_title: { "es": "¡Bienvenido al ayuntamiento de #{@instance.population}!" },
-        highlighted_content_banner_short_description: { "es": "Únete a nuestra plataforma democrática" },
-        highlighted_content_banner_image: paths[:banner_url],
-        smtp_settings: {},
-        omniauth_settings: {},
-        admin_terms_of_service_body: {},
-        content_security_policy: {},
-        file_upload_settings: {},
-        time_zone: "UTC",
-        external_domain_whitelist: [],
-        enable_participatory_space_filters: true
-      )
-      @organization.save
+      save_files(@instance, params[:instance][:banner], params[:instance][:logo])
       SetupDecidimInstanceJob.perform_later(@instance.id)
       redirect_to instances_path, notice: 'Instance creation initiated. Setup will complete in the background.'
     else
@@ -76,7 +47,7 @@ class InstancesController < ApplicationController
   private
 
   def instance_params
-    params.require(:instance).permit(:name, :multi_tenant, :port, :population, :province, :banner, :logo, :status, :shakapacker_port,
+    params.require(:instance).permit(:name, :multi_tenant, :port, :population, :province, :status, :shakapacker_port,
     feature_model_attributes: [:proposal, :anonimous_proposal, :participatory_text, :policy_proposal, :survey, :sortition, :citizen_forum,
     :budgeting, :da_support, :km_support, :ir_capability, :transparency, :decision, :meeting, :notification, :debate, :census, :delegation])
   end
@@ -89,17 +60,14 @@ class InstancesController < ApplicationController
   end
 
   def save_files(instance, banner_file, logo_file)
-    paths = {}
-    paths[:banner_url] = save_file(banner_file, 'banners') if banner_file
-    paths[:logo_url] = save_file(logo_file, 'logos') if logo_file
-    paths
+    save_file(instance, banner_file, 'banners')
+    save_file(instance, logo_file, 'logos')
   end
 
-  def save_file(uploaded_file, folder)
-    filename = SecureRandom.uuid + File.extname(uploaded_file.original_filename)
+  def save_file(instance, uploaded_file, folder)
     directory = Rails.root.join('public', 'uploads', folder)
     FileUtils.mkdir_p(directory) unless File.exist?(directory)
-    path = File.join(directory, filename)
+    path = File.join(directory, "#{instance.name}.jpg")
     File.open(path, 'wb') do |file|
       file.write(uploaded_file.read)
     end
