@@ -267,9 +267,9 @@ ul{
             <%= f.number_field :shakapacker_port, label: false %>
           </li>
 
-          <li class = 'form-group'>
+          <li class='form-group'>
             <label>Province:</label>
-            <%= f.text_field :province, label: false %>
+            <%= f.select :province, load_provinces.map { |province| [province, province] }, {label: false}, { class: 'form-control'}%>
           </li>
 
           <li class = 'form-group'>
