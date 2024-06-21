@@ -85,7 +85,7 @@ RUN chmod +x /usr/bin/entrypoint.sh
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 
 # Expose port 3000 to be accessible from the host.
-EXPOSE 3000 3002
+EXPOSE 3000
 
 # Set the entrypoint script to initialize the container
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
