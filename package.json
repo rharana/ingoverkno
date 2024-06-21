@@ -1,20 +1,32 @@
 {
-  "name": "ingoverkno",
+  "name": "app",
   "private": true,
   "dependencies": {
-    "@decidim/browserslist-config": "^0.28.1",
-    "@decidim/core": "^0.28.1",
-    "@decidim/elections": "^0.28.1",
-    "@decidim/webpacker": "^0.28.1"
+    "@babel/core": "7",
+    "@babel/plugin-transform-runtime": "7",
+    "@babel/preset-env": "7",
+    "@babel/runtime": "7",
+    "@types/babel__core": "7",
+    "@types/webpack": "5",
+    "babel-loader": "8",
+    "compression-webpack-plugin": "9",
+    "shakapacker": "7.1.0",
+    "terser-webpack-plugin": "5",
+    "webpack": "5",
+    "webpack-assets-manifest": "5",
+    "webpack-cli": "4",
+    "webpack-merge": "5"
   },
   "version": "0.1.0",
-  "devDependencies": {
-    "@decidim/dev": "^0.28.1",
-    "@decidim/eslint-config": "^0.28.1",
-    "@decidim/prettier-config": "^0.28.1",
-    "@decidim/stylelint-config": "^0.28.1"
+  "babel": {
+    "presets": [
+      "./node_modules/shakapacker/package/babel/preset.js"
+    ]
   },
   "browserslist": [
-    "extends @decidim/browserslist-config"
-  ]
+    "defaults"
+  ],
+  "devDependencies": {
+    "webpack-dev-server": "4"
+  }
 }

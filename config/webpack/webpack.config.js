@@ -1,10 +1,6 @@
-/* eslint-disable */
-process.env.NODE_ENV ??= "development"
+// See the shakacode/shakapacker README and docs directory for advice on customizing your webpackConfig.
+const { generateWebpackConfig } = require('shakapacker')
 
-const { webpackConfig, merge } = require("@decidim/webpacker")
-const customConfig = require("./custom")
+const webpackConfig = generateWebpackConfig()
 
-webpackConfig.optimization = {}
-const combinedConfig = merge(webpackConfig, customConfig)
-
-module.exports = combinedConfig
+module.exports = webpackConfig
