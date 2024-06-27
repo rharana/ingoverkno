@@ -1,87 +1,70 @@
+# app/controllers/instances_controller.rb
 class InstancesController < ApplicationController
-  before_action :set_instance, only: [:show, :edit, :update, :destroy, :start, :stop, :status]
+  before_action :setup_service
+  before_action :set_instance, only: [:update, :start, :show, :edit, :destroy, :stop, :status]
 
   def index
-    @instances = Instance.all
+    @instances = @service.list_instances
   end
-  
+
   def new
-    @instance = Instance.new
-    @instance.build_feature_model
+    # Initialize a new instance with empty or default parameters
+    @instance = @service.build_instance({})
   end
 
   def create
-
-    @instance = Instance.new(instance_params)
-    if(@instance.save)
-      save_files(@instance, params[:instance][:banner], params[:instance][:logo])
-      SetupDecidimInstanceJob.perform_later(@instance.id)
+    files = { banner: params[:instance][:banner], logo: params[:instance][:logo] }
+    success, @instance = @service.create_instance(instance_params, files)
+    if success
       redirect_to instances_path, notice: 'Instance creation initiated. Setup will complete in the background.'
     else
-      # If the instance fails to save, re-render the 'new' form
       render :new
     end
   end
 
   def update
-    if @instance.update(instance_params)
-      # If the update is successful, redirect to a specific path, usually the show page for the instance
+    success, @instance = @service.update_instance(params[:id], instance_params)
+    if success
       redirect_to instances_path, notice: 'Instance was successfully updated.'
+    else
+      render :edit
     end
   end
 
   def start
-    StartDecidimInstanceJob.perform_later(@instance.id)
-    head :ok # Just return OK status
+    @service.start_instance(params[:id])
+    head :ok
   end
 
   def status
-    render json: { status: @instance.status }
+    @status = @service.instance_status(params[:id])
+    render json: { status: @status }
   end
 
   def stop
-    StopDecidimInstanceJob.perform_later(@instance.id)
-    head :ok # Just return OK status
+    @service.stop_instance(params[:id])
+    head :ok
   end
 
   private
+
+  def setup_service
+    instance_repository = InstanceRepository.new
+    file_storage_adapter = FileStorageAdapter.new
+    job_scheduler_adapter = JobSchedulerAdapter.new
+    @service = InstanceManagementService.new(instance_repository, file_storage_adapter, job_scheduler_adapter)
+  end
+
+  def set_instance
+    @instance = @service.find_instance(params[:id])
+    if @instance.nil?
+      render json: { error: "Instance not found" }, status: :not_found
+    end
+  end
 
   def instance_params
     params.require(:instance).permit(:name, :multi_tenant, :port, :population, :province, :status, :shakapacker_port,
     feature_model_attributes: [:proposal, :anonimous_proposal, :participatory_text, :policy_proposal, :survey, :sortition, :citizen_forum,
     :budgeting, :da_support, :km_support, :ir_capability, :transparency, :decision, :meeting, :notification, :debate, :census, :delegation])
   end
-
-  def set_instance
-    @instance = Instance.find_by(id: params[:id])
-    if @instance.nil?
-      render json: { error: "Instance not found" }, status: :not_found
-    end
-  end
-
-  def save_files(instance, banner_file, logo_file)
-    save_file(instance, banner_file, 'banners')
-    save_file(instance, logo_file, 'logos')
-  end
-
-  def save_file(instance, uploaded_file, folder)
-    directory = Rails.root.join('public', 'uploads', folder)
-    FileUtils.mkdir_p(directory) unless File.exist?(directory)
-    path = File.join(directory, "#{instance.name}.jpg")
-    File.open(path, 'wb') do |file|
-      file.write(uploaded_file.read)
-    end
-    path
-  end
-
-  def destroy
-  end
-
-  def show
-  end
-
-  def edit
-  end
-
-
 end
