@@ -19,7 +19,7 @@ class SetupDecidimInstanceJob < ApplicationJob
     Dir.chdir('/app/instances')
 
     # Create and setup the new decidim app
-    system("decidim #{instance.name}")
+    system("git clone https://github.com/rharana/ingoverkno_decidim_model.git #{instance.name}")
     
     Dir.chdir(instance.name)
     system('yarn install')
@@ -30,10 +30,7 @@ class SetupDecidimInstanceJob < ApplicationJob
 
     Dir.chdir('config')
     system("sed -i 's/port: 3035/port: #{instance.shakapacker_port}/' shakapacker.yml")
-    system("sed -i 's/database: #{instance.name}_development/database: ingoverkno_development/' database.yml")
-    system("rm -rf /app/instances/#{instance.name}/db/migrate")
     system("cp /app/public/uploads/banners/#{instance.name}.jpg /app/instances/#{instance.name}/app/packs/images/#{instance.name}_banner.jpg")
-    system("cp -f /app/db/seeds.rb /app/instances/#{instance.name}/db/seeds.rb")
 
     Dir.chdir("/app/instances/#{instance.name}")
     system("rails db:seed")
