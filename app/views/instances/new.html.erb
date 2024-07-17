@@ -248,9 +248,9 @@ li img{
             <%= f.check_box :multi_tenant, label: false %>
           </li>
 
-          <li class = 'form-group'>
+          <li class='form-group'>
             <label>Population:</label>
-            <%= f.text_field :population, label: false %>
+            <%= f.select :population, load_towns.map { |population| [population, population] }, {label: false}, { class: 'form-control'}%>
           </li>
 
           <li class = 'form-group'>

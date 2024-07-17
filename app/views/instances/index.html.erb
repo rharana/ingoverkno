@@ -245,6 +245,30 @@ li img{
 	}
 </script>
 
+<!-- Modal HTML -->
+<!-- Modal for deletion confirmation -->
+<div id="deleteModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+    <div style="background-color: #fff; margin: 100px auto; padding: 20px; border: 1px solid #888; width: 50%; max-width: 300px; text-align: center;">
+        <h2>Are you sure you want to delete?</h2>
+        <button onclick="destroyInstance(document.getElementById('deleteModal').getAttribute('data-instance-id'));">Yes</button>
+        <button onclick="hideModal();">No</button>
+    </div>
+</div>
+
+
+<!-- Include this in your application's JavaScript pack -->
+<script>
+	function showModal(element) {
+		var instanceId = element.getAttribute('data-instance-id');
+		var modal = document.getElementById('deleteModal');
+		modal.setAttribute('data-instance-id', instanceId);
+		modal.style.display = 'block';
+	}
+
+	function hideModal() {
+		document.getElementById('deleteModal').style.display = 'none';
+	}
+</script>
 
 <nav>
   <img src = "/images/ingoverkno-logo.png"/>
@@ -284,7 +308,7 @@ li img{
 			<td><i class="material-icons" style='color: black'>publish</i></td>
 
 			<td>
-				<%= link_to '#', id: "delete-button-#{instance.id}", data: {status: instance.status, instance_id: instance.id}, onclick: "destroyInstance(#{instance.id}); return false;" do %>
+				<%= link_to '#', id: "delete-button-#{instance.id}", data: {status: instance.status, instance_id: instance.id}, onclick: "showModal(this); return false;" do %>
 					<i class="material-icons">delete</i>
 				<% end %>
 			</td>
