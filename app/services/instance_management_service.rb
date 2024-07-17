@@ -45,6 +45,10 @@ class InstanceManagementService
     def stop_instance(id)
         @job_scheduler.enqueue_stop_job(id)
     end
+
+    def destroy_instance(id)
+        @job_scheduler.enqueue_destroy_job(id)
+    end
   
     def instance_status(id)
         instance = @instance_repository.find(id)

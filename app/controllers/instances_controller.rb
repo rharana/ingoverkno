@@ -46,6 +46,12 @@ class InstancesController < ApplicationController
     head :ok
   end
 
+  def destroy
+    @service.destroy_instance(params[:id])
+    head :ok
+  end
+
+
   private
 
   def setup_service

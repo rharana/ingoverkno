@@ -198,6 +198,27 @@ li img{
 		.catch(error => console.error('Error:', error));
 	}
 
+	function destroyInstance(instanceId) {
+		const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+		console.log('Deleting Instance')
+		fetch(`/instances/${instanceId}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-CSRF-Token': csrfToken
+			},
+			credentials: 'same-origin'
+		})
+		.then(response => {
+			if (response.ok) {
+				console.log('OK')
+			} else {
+				console.error('Failed to stop instance: ' + response.statusText);
+			}
+		})
+		.catch(error => console.error('Error:', error));
+	}
+
 	function checkStatus(instanceId, button) {
 		const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 		const interval = setInterval(() => {
@@ -261,7 +282,13 @@ li img{
 				<% end %>
 			</td>
 			<td><i class="material-icons" style='color: black'>publish</i></td>
-			<td><i class="material-icons" style='color: black'>delete</i></td>
+
+			<td>
+				<%= link_to '#', id: "delete-button-#{instance.id}", data: {status: instance.status, instance_id: instance.id}, onclick: "destroyInstance(#{instance.id}); return false;" do %>
+					<i class="material-icons">delete</i>
+				<% end %>
+			</td>
+
 		</tr>
 	<% end %>
 </table>

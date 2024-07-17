@@ -11,5 +11,9 @@ class JobSchedulerAdapter
     def enqueue_stop_job(instance_id)
       StopDecidimInstanceJob.perform_later(instance_id)
     end
+
+    def enqueue_destroy_job(instance_id)
+      DeleteDecidimInstanceJob.perform_later(instance_id)
+    end
 end
   
