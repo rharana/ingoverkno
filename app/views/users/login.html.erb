@@ -101,23 +101,23 @@ ul{
 
     <%= form_with(model: @user, html: { id: 'instance_form', multipart: true }, local: true) do |f| %>
     <div class = 'container'>
-        <p>Para poder utilizar este servicio, debe ser usuario del Portal Provincial de la diputación de Sevilla.</p>
-        <p>Por favor, introduzca su usuario y su contraseña:</p>
+        <p>To use this service, you must be a user of "Portal Provincial de la diputación de Sevilla".</p>
+        <p>Please insert your username and password:</p>
         <div style = 'background-color: grey; height: 1px'></div>
         <div style = 'display: flex;'>
             <ul>
 
                 <li class = 'form-group'>
-                    <label><b>Usuario:</b></label>
+                    <label><b>Username:</b></label>
                     <%= f.text_field :name, label: false %>
                 </li>
                 <li class = 'form-group'>
-                    <label><b>Contraseña:</b></label>
+                    <label><b>Password:</b></label>
                     <%= f.password_field :password, label: false %>
                 </li>
             </ul>
         </div>
-        <%= f.submit "Acceso al portal provincial", class: "btn-submit" %>
+        <%= f.submit "Access to province portal", class: "btn-submit" %>
     </div>
 
     <% end %>
